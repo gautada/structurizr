@@ -40,7 +40,7 @@ COPY entrypoint /etc/container/entrypoint
 ARG CONTAINER_VERSION="3263"
 ARG STRUCTURIZR_VERSION="$CONTAINER_VERSION"
 ARG STRUCTURIZR_BRANCH=v"$STRUCTURIZR_VERSION"
-ARG STRUCTURIZR_UI_BRANCH=onpremises-v"$STRUCTURIZR_SERVER_VERSION"
+ARG STRUCTURIZR_UI_BRANCH=onpremises-v"$STRUCTURIZR_VERSION"
 
 RUN /usr/bin/git config --global advice.detachedHead false
 RUN /usr/bin/git clone --branch $STRUCTURIZR_BRANCH --depth 1 https://github.com/structurizr/onpremises.git structurizr-onpremises
