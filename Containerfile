@@ -52,7 +52,7 @@ WORKDIR structurizr-onpremises
 # RUN /structurizr-onpremises/ui.sh
 # RUN /usr/bin/gradle clean build
 
-ADD https://github.com/structurizr/onpremises/releases/download/v2024.03.03/structurizr-onpremises.war
+ADD https://github.com/structurizr/onpremises/releases/download/v2024.03.03/structurizr-onpremises.war structurizr-onpremises.war
 
 # ╭―
 # │ CONFIGURATION
