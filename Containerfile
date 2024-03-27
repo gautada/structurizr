@@ -38,12 +38,13 @@ COPY entrypoint /etc/container/entrypoint
 # │ APPLICATION        
 # ╰――――――――――――――――――――
 ARG CONTAINER_VERSION="3263"
-ARG STRUCTURIZR_SERVER_VERSION="$CONTAINER_VERSION"
-ARG STRUCTURIZR_SERVER_BRANCH=v"$STRUCTURIZR_SERVER_VERSION"
+ARG STRUCTURIZR_VERSION="$CONTAINER_VERSION"
+ARG STRUCTURIZR_BRANCH=v"$STRUCTURIZR_SERVER_VERSION"
+ARG STRUCTURIZR_UI_BRANCH=onpremises-v"$STRUCTURIZR_SERVER_VERSION"
 
 RUN /usr/bin/git config --global advice.detachedHead false
-RUN /usr/bin/git clone --branch $STRUCTURIZR_SERVER_BRANCH --depth 1 https://github.com/structurizr/onpremises.git structurizr-onpremises
-RUN /usr/bin/git clone --branch $STRUCTURIZR_SERVER_BRANCH --depth 1 https://github.com/structurizr/ui.git structurizr-ui
+RUN /usr/bin/git clone --branch $STRUCTURIZR_BRANCH --depth 1 https://github.com/structurizr/onpremises.git structurizr-onpremises
+RUN /usr/bin/git clone --branch $STRUCTURIZR_UI_BRANCH --depth 1 https://github.com/structurizr/ui.git structurizr-ui
 
 WORKDIR structurizr-onpremises
 
