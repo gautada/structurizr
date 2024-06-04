@@ -7,7 +7,7 @@
 #             [gist](https://gist.github.com/gautada/f185700af585a50b3884ad10c2b02f98)
 
 container_entrypoint() {
- tail -f /dev/null
+ /usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war /home/structurizr/workspace
 }
 
 

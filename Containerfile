@@ -1,5 +1,25 @@
 ARG ALPINE_VERSION=latest
 
+FROM docker.io/gautada/alpine:$ALPINE_VERSION AS build
+ARG CONTAINER_VERSION="2024.03.03"
+ARG STRUCTURIZR_VERSION="$CONTAINER_VERSION"
+ARG STRUCTURIZR_BRANCH=v"$STRUCTURIZR_VERSION"
+
+RUN /sbin/apk add --no-cache openjdk17
+
+WORKDIR /
+RUN /usr/bin/git config --global advice.detachedHead false
+RUN /usr/bin/git clone --branch $STRUCTURIZR_BRANCH --depth 1 https://github.com/structurizr/lite.git structurizr-lite
+RUN /usr/bin/git clone --branch lite-v2024.02.22 --depth 1 https://github.com/structurizr/ui.git structurizr-ui
+
+WORKDIR /structurizr-lite
+
+RUN /structurizr-lite/ui.sh
+RUN /usr/bin/wget https://services.gradle.org/distributions/gradle-8.8-rc-1-bin.zip
+RUN /usr/bin/unzip gradle-8.8-rc-1-bin.zip
+RUN ./gradle-8.8-rc-1/bin/gradle build
+
+
 FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
 # ╭―
@@ -12,7 +32,7 @@ LABEL description="A container for structurizr architecture tooling"
 # ╭―
 # │ USER
 # ╰――――――――――――――――――――
-ARG USER=c4
+ARG USER=structurizr
 RUN /usr/sbin/usermod -l $USER alpine
 RUN /usr/sbin/usermod -d /home/$USER -m $USER
 RUN /usr/sbin/groupmod -n $USER alpine
@@ -37,29 +57,17 @@ COPY entrypoint /etc/container/entrypoint
 # ╭―
 # │ APPLICATION        
 # ╰――――――――――――――――――――
-ARG CONTAINER_VERSION="3263"
-ARG STRUCTURIZR_VERSION="$CONTAINER_VERSION"
-ARG STRUCTURIZR_BRANCH=v"$STRUCTURIZR_VERSION"
-ARG STRUCTURIZR_UI_BRANCH=onpremises-v"$STRUCTURIZR_VERSION"
+RUN /sbin/apk add --no-cache openjdk17 graphviz
 
-RUN /usr/bin/git config --global advice.detachedHead false
-RUN /usr/bin/git clone --branch $STRUCTURIZR_BRANCH --depth 1 https://github.com/structurizr/onpremises.git structurizr-onpremises
-RUN /usr/bin/git clone --branch $STRUCTURIZR_UI_BRANCH --depth 1 https://github.com/structurizr/ui.git structurizr-ui
-
-WORKDIR structurizr-onpremises
-
-# RUN /usr/sbin/apk add --no-cache gradle
-# RUN /structurizr-onpremises/ui.sh
-# RUN /usr/bin/gradle clean build
-
-ADD https://github.com/structurizr/onpremises/releases/download/v2024.03.03/structurizr-onpremises.war structurizr-onpremises.war
+COPY --from=build /structurizr-lite/build/libs/structurizr-lite.war /home/$USER/
+RUN ln -fsv /mnt/volumes/container/Foodbuy-Common-App/workspace /home/$USER/workspace
 
 # ╭―
 # │ CONFIGURATION
 # ╰――――――――――――――――――――
 
 RUN /bin/chown -R $USER:$USER /home/$USER
-# USER $USER
+USER $USER
 VOLUME /mnt/volumes/backup
 VOLUME /mnt/volumes/configmaps
 VOLUME /mnt/volumes/container
