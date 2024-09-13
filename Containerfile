@@ -5,7 +5,7 @@ ARG CONTAINER_VERSION="2024.03.03"
 ARG STRUCTURIZR_VERSION="$CONTAINER_VERSION"
 ARG STRUCTURIZR_BRANCH=v"$STRUCTURIZR_VERSION"
 
-RUN /sbin/apk add --no-cache openjdk17
+RUN /sbin/apk add --no-cache openjdk21
 
 WORKDIR /
 RUN /usr/bin/git config --global advice.detachedHead false
@@ -57,7 +57,7 @@ COPY entrypoint /etc/container/entrypoint
 # ╭―
 # │ APPLICATION        
 # ╰――――――――――――――――――――
-RUN /sbin/apk add --no-cache openjdk17 graphviz
+RUN /sbin/apk add --no-cache openjdk21 graphviz
 
 COPY --from=build /structurizr-lite/build/libs/structurizr-lite.war /home/$USER/
 RUN ln -fsv /mnt/volumes/container/Foodbuy-Common-App/workspace /home/$USER/workspace
