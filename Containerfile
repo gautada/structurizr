@@ -60,7 +60,7 @@ COPY entrypoint /etc/container/entrypoint
 RUN /sbin/apk add --no-cache openjdk21 graphviz
 
 COPY --from=build /structurizr-lite/build/libs/structurizr-lite.war /home/$USER/
-RUN ln -fsv /mnt/volumes/container/Foodbuy-Common-App/workspace /home/$USER/workspace
+RUN ln -fsv /mnt/volumes/container/Foodbuy-Common-Architecture/workspace /home/$USER/workspace
 
 # ╭―
 # │ CONFIGURATION
