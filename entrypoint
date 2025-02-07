@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 #
 # entrypoint: Located at `/etc/container/entrypoint` this script is the custom
 #             entry for a container as called by `/usr/bin/container-entrypoint` set
@@ -6,9 +6,12 @@
 #             The default template is kept in
 #             [gist](https://gist.github.com/gautada/f185700af585a50b3884ad10c2b02f98)
 
-container_entrypoint() {
- /usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war /home/structurizr/workspace
-}
+
+sudo /usr/sbin/cron
+export JAVA_HOME=/opt/jdk
+export PATH=$PATH:/opt/jdk/bin
+/usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar /opt/structurizr.war /home/dsl/workspace
+
 
 
 
