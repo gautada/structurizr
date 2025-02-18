@@ -37,7 +37,8 @@ RUN /usr/bin/chown -R ${USER}:${USER} /opt
 USER $USER
  
 WORKDIR /home/$USER
-RUN mkdir -p /home/$USER/workspace/libraries /home/$USER/workspace/local
+RUN mkdir -p /home/$USER/workspace/libraries 
+RUN ln -fsv /mnt/volumes/containers /home/$USER/workspace/local
 RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
 
 # ENV JAVA_HOME=/opt/jdk
