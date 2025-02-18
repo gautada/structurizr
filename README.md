@@ -6,6 +6,3 @@ compatible workspaces, with the Structurizr DSL being the recommended option for
 DSL example creates two diagrams, based upon a single set of elements and relationships..
 
 https://github.com/structurizr
-
-
-
