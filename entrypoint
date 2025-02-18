@@ -10,6 +10,7 @@
 sudo /usr/sbin/cron
 export JAVA_HOME=/opt/jdk
 export PATH=$PATH:/opt/jdk/bin
+cd /home/dsl/workspace
 /usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar /opt/structurizr.war /home/dsl/workspace
 
 
