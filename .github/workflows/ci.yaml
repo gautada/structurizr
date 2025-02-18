@@ -54,7 +54,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.base_ref == 'main'
         run: |
           P_IMG="docker.io/${{ secrets.DOCKERIO_REGISTRY }}"
-          IMG="$P_IMG/homepage:0.10.9"
+          IMG="$P_IMG/homepage:2024.12.07"
           /usr/bin/podman tag "structurizr:dev" $IMG 
           /usr/bin/podman push $IMG
           IMG="$P_IMG/homepage:latest"
