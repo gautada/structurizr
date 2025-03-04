@@ -33,10 +33,10 @@ COPY entrypoint /etc/container/entrypoint
 # COPY privileged /etc/sudoers.d/privileged
   
 ARG USER=dsl
-RUN /usr/sbin/useradd -m ${USER} 
-RUN groupadd privileged
-RUN usermod -aG privileged dsl
-RUN /usr/bin/chown -R ${USER}:${USER} /opt
+RUN /usr/sbin/useradd -m ${USER} \
+ && groupadd privileged \
+ && usermod -aG privileged dsl \
+ && /usr/bin/chown -R ${USER}:${USER} /opt
 USER $USER
  
 WORKDIR /home/$USER
