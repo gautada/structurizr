@@ -1,6 +1,9 @@
-FROM docker.io/ubuntu:24.04 as container
+ARG UBUNTU_VERSION="24.04"
+FROM docker.io/ubuntu:$UBUNTU_VERSION as container
 
-ARG STRUCTURIZR_LITE_VERSION="2024.12.07"
+ARG CONTAINER_VERSION="2024.12.07"
+ARG OPENJDK_VERSION="25-ea+"
+ARG OPENJDK_RELEASE="12"
 
 LABEL source="https://github.com/gautada/structureizr-container.git"
 LABEL maintainer="Adam Gautier <adam@gautier.org>"
@@ -10,24 +13,24 @@ RUN /usr/bin/apt-get update \
  && /usr/bin/apt-get install --yes cron git graphviz sudo
 
 WORKDIR /opt
-ADD https://download.java.net/java/early_access/jdk25/7/GPL/openjdk-25-ea+7_linux-aarch64_bin.tar.gz jdk-25.tgz
-ADD https://github.com/structurizr/lite/releases/download/v$STRUCTURIZR_LITE_VERSION/structurizr-lite.war structurizr.war
+ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-aarch64_bin.tar.gz" jdk-25.tgz
+ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
 RUN /usr/bin/tar zxf jdk-25.tgz \
  && /usr/bin/rm jdk-25.tgz \
  && /usr/bin/mv jdk-25 jdk \
  && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
 
-COPY container-crontab /etc/cron.d/container-crontab
+# COPY container-crontab /etc/cron.d/container-crontab
 # Give proper permissions
-RUN chmod 0644 /etc/cron.d/container-crontab && crontab /etc/cron.d/container-crontab
+# RUN chmod 0644 /etc/cron.d/container-crontab && crontab /etc/cron.d/container-crontab
 
-COPY update-libraries /usr/bin/update-libraries
+# COPY update-libraries /usr/bin/update-libraries
 
 COPY entrypoint /etc/container/entrypoint
 # RUN chmod 777 /etc/container/entrypoint
 
-COPY privileged /etc/sudoers.d/privileged
+# COPY privileged /etc/sudoers.d/privileged
   
 ARG USER=dsl
 RUN /usr/sbin/useradd -m ${USER} 
