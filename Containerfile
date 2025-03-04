@@ -43,7 +43,7 @@ WORKDIR /home/$USER
 # RUN mkdir -p /home/$USER/workspace/libraries 
 # RUN ln -fsv /mnt/volumes/containers /home/$USER/workspace/local
 # RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
-RUN ln -fsv /mnt/volumes/container /home/$USER/workspace
+RUN ln -fsv /mnt/volumes/container/workspace /home/$USER/workspace
 
 # ENV JAVA_HOME=/opt/jdk
 # ENV PATH=$PATH:/opt/jdk/bin
