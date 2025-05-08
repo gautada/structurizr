@@ -1,9 +1,11 @@
 ARG UBUNTU_VERSION="24.04"
 FROM docker.io/ubuntu:$UBUNTU_VERSION as container
 
-ARG CONTAINER_VERSION="2024.12.07"
+# https://github.com/structurizr/lite
+ARG CONTAINER_VERSION="2025.03.28"
+# https://jdk.java.net/25/
 ARG OPENJDK_VERSION="25-ea+"
-ARG OPENJDK_RELEASE="12"
+ARG OPENJDK_RELEASE="21"
 
 LABEL source="https://github.com/gautada/structureizr-container.git"
 LABEL maintainer="Adam Gautier <adam@gautier.org>"
