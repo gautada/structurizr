@@ -14,5 +14,5 @@ if [ -z "${STRUCTURIZR_WORKSPACE}" ] ; then
 fi
 /usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
               -jar /opt/structurizr.war \
-              ${STRUCTURIZR_WORKSPACE}
+              "${STRUCTURIZR_WORKSPACE}"
 
