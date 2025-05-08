@@ -11,10 +11,10 @@ on:
 
 env:
   IMAGE_NAME: "structurizr"
-  IMAGE_VERSION: "2024.12.07"
+  IMAGE_VERSION: "2025.03.28"
   UBUNTU_VERSION: "24.04"
   OPENJDK_VERSION: "25-ea+" # See: Linux Aarch65 @ https://jdk.java.net/25/
-  OPENJDK_RELEASE: "12"
+  OPENJDK_RELEASE: "21"
   IMAGE_TAG_PROD: "latest"
   IMAGE_TAG_DEV: "dev"
 
