@@ -9,12 +9,10 @@ sudo /usr/sbin/cron
 export JAVA_HOME=/opt/jdk
 export PATH="$PATH:/opt/jdk/bin"
 # cd /home/dsl/workspace
-/usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar /opt/structurizr.war /home/dsl/workspace
-
-
-
-
-
-
-
+if [ -z "$STRUCTURIZR_WORKSPACE" ] ; then
+ export STRUCTURIZR_WORKSPACE="/home/dsl/workspace" 
+fi
+/usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
+              -jar /opt/structurizr.war \
+              $STRUCTURIZR_WORKSPACE
 
