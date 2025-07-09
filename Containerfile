@@ -4,7 +4,7 @@ FROM docker.io/ubuntu:$UBUNTU_VERSION as container
 # https://github.com/structurizr/lite
 ARG CONTAINER_VERSION="2025.03.28"
 # https://jdk.java.net/25/
-ARG OPENJDK_VERSION="25-ea+"
+ARG OPENJDK_VERSION="25"
 ARG OPENJDK_RELEASE="21"
 
 LABEL source="https://github.com/gautada/structureizr-container.git"
@@ -16,14 +16,14 @@ RUN /usr/bin/apt-get update \
 
 WORKDIR /opt
 COPY arch.sh arch.sh
-RUN . ./arch.sh
-ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-$(. ./arch.sh)_bin.tar.gz" jdk-25.tgz
+RUN . ./arch.sh "${OPENJDK_VERSION}" "${OPENJDK_RELEASE}"
+# ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-$(. ./arch.sh)_bin.tar.gz" jdk-25.tgz
 ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
-RUN /usr/bin/tar zxf jdk-25.tgz \
- && /usr/bin/rm jdk-25.tgz \
- && /usr/bin/mv jdk-25 jdk \
- && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
+# RUN /usr/bin/tar zxf jdk-25.tgz \
+#  && /usr/bin/rm jdk-25.tgz \
+#  && /usr/bin/mv jdk-25 jdk \
+#  && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
 
 # COPY container-crontab /etc/cron.d/container-crontab
 # Give proper permissions
