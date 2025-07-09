@@ -12,7 +12,7 @@ LABEL maintainer="Adam Gautier <adam@gautier.org>"
 LABEL description="A container for structurizr architecture tooling"
 
 RUN /usr/bin/apt-get update \
- && /usr/bin/apt-get install --yes cron git graphviz sudo
+ && /usr/bin/apt-get install --yes cron curl git graphviz sudo
 
 WORKDIR /opt
 COPY arch.sh arch.sh
