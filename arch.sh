@@ -14,7 +14,7 @@ if [ "$ARCH" = "x86_64" ]; then
 fi
 
 URL="https://download.java.net/java/early_access/jdk${VERSION}/${RELEASE}/GPL/openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz"
-echo URL
+echo "${URL}"
 curl -vO "${URL}"
 
 /usr/bin/mv "openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz" "jdk-${VERSION}.tar.gz"
