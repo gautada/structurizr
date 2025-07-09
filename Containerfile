@@ -17,7 +17,7 @@ RUN /usr/bin/apt-get update \
 WORKDIR /opt
 COPY arch.sh arch.sh
 RUN . ./arch.sh
-ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-aarch64_bin.tar.gz" jdk-25.tgz
+ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-$(. ./arch.sh)_bin.tar.gz" jdk-25.tgz
 ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
 RUN /usr/bin/tar zxf jdk-25.tgz \
