@@ -15,6 +15,7 @@ RUN /usr/bin/apt-get update \
  && /usr/bin/apt-get install --yes cron git graphviz sudo
 
 WORKDIR /opt
+RUN uname -m
 ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-aarch64_bin.tar.gz" jdk-25.tgz
 ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
