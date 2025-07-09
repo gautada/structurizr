@@ -16,7 +16,7 @@ RUN /usr/bin/apt-get update \
 
 WORKDIR /opt
 COPY arch.sh arch.sh
-RUN . ./arch.sh "${OPENJDK_VERSION}" "${OPENJDK_RELEASE}"
+RUN /bin/sh ./arch.sh "${OPENJDK_VERSION}" "${OPENJDK_RELEASE}"
 # ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-$(. ./arch.sh)_bin.tar.gz" jdk-25.tgz
 ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
