@@ -5,7 +5,7 @@ FROM docker.io/ubuntu:$UBUNTU_VERSION as container
 ARG CONTAINER_VERSION="2025.03.28"
 # https://jdk.java.net/25/
 ARG OPENJDK_VERSION="25"
-ARG OPENJDK_RELEASE="21"
+ARG OPENJDK_RELEASE="30"
 
 LABEL source="https://github.com/gautada/structureizr-container.git"
 LABEL maintainer="Adam Gautier <adam@gautier.org>"
