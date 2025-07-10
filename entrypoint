@@ -13,6 +13,10 @@ export PATH="$PATH:/opt/jdk/bin"
 if [ -z "${STRUCTURIZR_WORKSPACE}" ] ; then
  export STRUCTURIZR_WORKSPACE="/home/dsl/workspace" 
 fi
+
+cd /home/dsl
+git clone --branch atg htps://vcuvs.visualstudio.com/Digital%20Platform/_git/omb_architecture
+
 /usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
               -jar /opt/structurizr.war \
               "${STRUCTURIZR_WORKSPACE}"
