@@ -45,8 +45,8 @@ USER $USER
  
 WORKDIR /home/$USER
 # RUN mkdir -p /home/$USER/workspace/libraries 
-RUN ln -fsv /mnt/volumes/configuration/.gitconfig \
- && ln -fsv /mnt/volumes/configuration/.git-credentials \
+RUN ln -fsv /mnt/volumes/configuration/.gitconfig . \
+ && ln -fsv /mnt/volumes/configuration/.git-credentials . \
  && ln -fsv /home/$USER/omb-architecture/online-mobile-banking workspace
 # RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
 # RUN ln -fsv /mnt/volumes/container/workspace /home/$USER/workspace
