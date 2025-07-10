@@ -10,12 +10,12 @@ ARCH=$(uname -m)
 echo "${VERSION} ${RELEASE} ${ARCH}"
 
 if [ "$ARCH" = "x86_64" ]; then
-  ARCH="x86"
+  ARCH="x64"
 fi
 
 URL="https://download.java.net/java/early_access/jdk${VERSION}/${RELEASE}/GPL/openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz"
 echo "${URL}"
-curl -sO "${URL}"
+curl -sLO "${URL}"
 
 /usr/bin/mv  "openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz" "jdk-${VERSION}.tar.gz"
 /usr/bin/tar zxf "jdk-${VERSION}.tar.gz"
