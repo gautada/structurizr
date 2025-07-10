@@ -15,13 +15,13 @@ fi
 
 URL="https://download.java.net/java/early_access/jdk${VERSION}/${RELEASE}/GPL/openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz"
 echo "${URL}"
-curl -vO "${URL}"
+curl -O "${URL}"
 
-/usr/bin/mv "openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz" "jdk-${VERSION}.tar.gz"
-/usr/bin/tar zxf "jdk-${VERSION}.tar.gz"
-/usr/bin/rm "jdk-${VERSION}.tar.gz"
-/usr/bin/mv "jdk-${VERSION}" jdk
-/usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
+# /usr/bin/mv "openjdk-${VERSION}-ea+${RELEASE}_linux-${ARCH}_bin.tar.gz" "jdk-${VERSION}.tar.gz"
+# /usr/bin/tar zxf "jdk-${VERSION}.tar.gz"
+# /usr/bin/rm "jdk-${VERSION}.tar.gz"
+# /usr/bin/mv "jdk-${VERSION}" jdk
+# /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
 echo "*************************************************************************************"
 echo "*************************************************************************************"
 echo "*************************************************************************************"
