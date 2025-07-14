@@ -20,44 +20,39 @@ RUN chmod +x ./arch.sh && ./arch.sh "${OPENJDK_VERSION}" "${OPENJDK_RELEASE}"
 # ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-$(. ./arch.sh)_bin.tar.gz" jdk-25.tgz
 ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
 
-# RUN /usr/bin/tar zxf jdk-25.tgz \
-#  && /usr/bin/rm jdk-25.tgz \
-#  && /usr/bin/mv jdk-25 jdk \
-#  && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
-
-# COPY container-crontab /etc/cron.d/container-crontab
-# Give proper permissions
-# RUN chmod 0644 /etc/cron.d/container-crontab && crontab /etc/cron.d/container-crontab
-
-# COPY update-libraries /usr/bin/update-libraries
+## RUN /usr/bin/tar zxf jdk-25.tgz \
+##  && /usr/bin/rm jdk-25.tgz \
+##  && /usr/bin/mv jdk-25 jdk \
+##  && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
+## COPY container-crontab /etc/cron.d/container-crontab
+## Give proper permissions
+## RUN chmod 0644 /etc/cron.d/container-crontab && crontab /etc/cron.d/container-crontab
+## COPY update-libraries /usr/bin/update-libraries
 
 COPY entrypoint /etc/container/entrypoint
-# RUN chmod 777 /etc/container/entrypoint
-
-# COPY privileged /etc/sudoers.d/privileged
+## RUN chmod 777 /etc/container/entrypoint
+## COPY privileged /etc/sudoers.d/privileged
   
 ARG USER=dsl
 RUN /usr/sbin/useradd -m ${USER} \
  && groupadd privileged \
  && usermod -aG privileged dsl \
  && /usr/bin/chown -R ${USER}:${USER} /opt
+
+WORKDIR /home/$USER/default
+COPY workspace.dsl workspace.dsl
+
 USER $USER
 
 WORKDIR /home/$USER/default
 COPY workspace.dsl workspace.dsl
+RUN chown $USER:$USER -R /home/$USER
 
 WORKDIR /home/$USER
 # RUN mkdir -p /home/$USER/workspace/libraries 
 RUN ln -fsv /mnt/volumes/configuration/.gitconfig . \
  && ln -fsv /mnt/volumes/configuration/.git-credentials . \
- && ln -fsv /home/$USER/omb-architecture/online-mobile-banking workspace \
- && mkdir -p /home/$USER/.structurizr \
- && chmod $USER:$USER -R /home/$USER
-
-# RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
-# RUN ln -fsv /mnt/volumes/container/workspace /home/$USER/workspace
-
-# ENV JAVA_HOME=/opt/jdk
-# ENV PATH=$PATH:/opt/jdk/bin
+ && ln -fsv /home/$USER/default workspace \
+ && mkdir -p /home/$USER/.structurizr
 
 ENTRYPOINT ["/etc/container/entrypoint"]
