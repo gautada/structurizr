@@ -41,12 +41,9 @@ RUN /usr/sbin/useradd -m ${USER} \
 
 WORKDIR /home/$USER/default
 COPY workspace.dsl workspace.dsl
+RUN chown $USER:$USER -R /home/$USER
 
 USER $USER
-
-WORKDIR /home/$USER/default
-COPY workspace.dsl workspace.dsl
-RUN chown $USER:$USER -R /home/$USER
 
 WORKDIR /home/$USER
 # RUN mkdir -p /home/$USER/workspace/libraries 
