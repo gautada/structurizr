@@ -42,12 +42,18 @@ RUN /usr/sbin/useradd -m ${USER} \
  && usermod -aG privileged dsl \
  && /usr/bin/chown -R ${USER}:${USER} /opt
 USER $USER
- 
+
+WORKDIR /home/$USER/default
+COPY workspace.dsl workspace.dsl
+
 WORKDIR /home/$USER
 # RUN mkdir -p /home/$USER/workspace/libraries 
 RUN ln -fsv /mnt/volumes/configuration/.gitconfig . \
  && ln -fsv /mnt/volumes/configuration/.git-credentials . \
- && ln -fsv /home/$USER/omb-architecture/online-mobile-banking workspace
+ && ln -fsv /home/$USER/omb-architecture/online-mobile-banking workspace \
+ && mkdir -p /home/$USER/.structurizr \
+ && chmod $USER:$USER -R /home/$USER
+
 # RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
 # RUN ln -fsv /mnt/volumes/container/workspace /home/$USER/workspace
 
