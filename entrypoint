@@ -15,9 +15,8 @@ if [ -z "${STRUCTURIZR_WORKSPACE}" ] ; then
 fi
 
 cd /home/dsl || exit
-git clone --branch atg htps://vcuvs.visualstudio.com/Digital%20Platform/_git/omb_architecture
 
-/usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
-              -jar /opt/structurizr.war \
-              "${STRUCTURIZR_WORKSPACE}"
-# tail -f /dev/null
+# /usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
+#               -jar /opt/structurizr.war \
+#               "${STRUCTURIZR_WORKSPACE}"
+tail -f /dev/null
