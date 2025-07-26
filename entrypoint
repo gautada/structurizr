@@ -16,7 +16,7 @@ fi
 
 cd /home/dsl || exit
 
-# /usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
-#               -jar /opt/structurizr.war \
-#               "${STRUCTURIZR_WORKSPACE}"
-tail -f /dev/null
+/usr/bin/java -Djdk.util.jar.enableMultiRelease=false \
+              -jar /opt/structurizr.war \
+              "${STRUCTURIZR_WORKSPACE}"
+# tail -f /dev/null
