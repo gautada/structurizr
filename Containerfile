@@ -46,18 +46,19 @@ ADD "https://github.com/structurizr/lite/releases/download/v${IMAGE_VERSION}/str
 ADD "https://github.com/structurizr/cli/releases/download/v${IMAGE_VERSION}/structurizr-cli.zip" structurizr-cli.zip
 RUN unzip structurizr-cli.zip -d /opt/structurizr/cli \
  && rm -rf /opt/structurizr/structurizr-cli.zip \
- && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr
-WORKDIR /home/$USER/default
-COPY workspace.dsl workspace.dsl
-RUN chown $USER:$USER -R /home/$USER /opt
+ && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr \
+ && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace"
+COPY workspace.dsl /mnt/volumes/data/workspace.dsl
+RUN chown "${USER}:${USER}" -R "/home/${USER}" /opt
 
 # ╭――――――――――――――――――――╮
 # │ CONTAINER          │
 # ╰――――――――――――――――――――╯
 USER $USER
+WORKDIR /home/$USER
 VOLUME /mnt/volumes/backup
 VOLUME /mnt/volumes/configmaps
-VOLUME /mnt/volumes/container
+VOLUME /mnt/volumes/data
 VOLUME /mnt/volumes/secrets
 
 
