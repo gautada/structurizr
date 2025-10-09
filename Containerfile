@@ -1,51 +1,64 @@
-ARG UBUNTU_VERSION="24.04"
-FROM docker.io/ubuntu:$UBUNTU_VERSION as container
+ARG JAVA_VERSION=25.0.0
 
-ARG CONTAINER_VERSION="2024.12.07"
-ARG OPENJDK_VERSION="25-ea+"
-ARG OPENJDK_RELEASE="12"
+FROM docker.io/gautada/java:$JAVA_VERSION as CONTAINER
+USER root
+# ╭――――――――――――――――――――╮
+# │ VARIABLES          │
+# ╰――――――――――――――――――――╯
+ARG IMAGE_NAME="structurizer"
+ARG IMAGE_VERSION="3262"
 
-LABEL source="https://github.com/gautada/structureizr-container.git"
-LABEL maintainer="Adam Gautier <adam@gautier.org>"
-LABEL description="A container for structurizr architecture tooling"
+# ╭――――――――――――――――――――╮
+# │ METADATA           │
+# ╰――――――――――――――――――――╯
+LABEL org.opencontainers.image.title="${IMAGE_NAME}"
+LABEL org.opencontainers.image.description="A base container for java."
+LABEL org.opencontainers.image.url="https://hub.docker.com/r/gautada/${IMAGE_NAME}"
+LABEL org.opencontainers.image.source="https://github.com/gautada/${IMAGE_NAME}"
+LABEL org.opencontainers.image.version="${PACKAGE_VERSION}"
+LABEL org.opencontainers.image.license="Upstream"
 
-RUN /usr/bin/apt-get update \
- && /usr/bin/apt-get install --yes cron git graphviz sudo
-
-WORKDIR /opt
-ADD "https://download.java.net/java/early_access/jdk25/${OPENJDK_RELEASE}/GPL/openjdk-${OPENJDK_VERSION}${OPENJDK_RELEASE}_linux-aarch64_bin.tar.gz" jdk-25.tgz
-ADD "https://github.com/structurizr/lite/releases/download/v$CONTAINER_VERSION/structurizr-lite.war" structurizr.war
-
-RUN /usr/bin/tar zxf jdk-25.tgz \
- && /usr/bin/rm jdk-25.tgz \
- && /usr/bin/mv jdk-25 jdk \
- && /usr/bin/ln -fsv /opt/jdk/bin/java /usr/bin/java
-
-# COPY container-crontab /etc/cron.d/container-crontab
-# Give proper permissions
-# RUN chmod 0644 /etc/cron.d/container-crontab && crontab /etc/cron.d/container-crontab
-
-# COPY update-libraries /usr/bin/update-libraries
-
-COPY entrypoint /etc/container/entrypoint
-# RUN chmod 777 /etc/container/entrypoint
-
-# COPY privileged /etc/sudoers.d/privileged
-  
+# ╭――――――――――――――――――――╮
+# │ USER               │
+# ╰――――――――――――――――――――╯
 ARG USER=dsl
-RUN /usr/sbin/useradd -m ${USER} \
- && groupadd privileged \
- && usermod -aG privileged dsl \
- && /usr/bin/chown -R ${USER}:${USER} /opt
+RUN /usr/sbin/usermod -l $USER duke \
+  && /usr/sbin/usermod -d /home/$USER -m $USER \
+  && /usr/sbin/groupmod -n $USER duke \
+  && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
+
+# ╭――――――――――――――――――――╮
+# │ BACKUP             │
+# ╰――――――――――――――――――――╯
+# COPY backup.sh /etc/container/backup
+
+# ╭――――――――――――――――――――╮
+# │ ENTRYPOINT         │
+# ╰――――――――――――――――――――╯
+COPY entrypoint.sh /etc/container/entrypoint
+
+# ╭――――――――――――――――――――╮
+# │ APPLICATION        │
+# ╰――――――――――――――――――――╯
+RUN /sbin/apk add --no-cache graphviz  bash 
+WORKDIR /opt/structurizr
+ADD "https://github.com/structurizr/lite/releases/download/v${IMAGE_VERSION}/structurizr-lite.war" structurizr.war
+ADD "https://github.com/structurizr/cli/releases/download/v${IMAGE_VERSION}/structurizr-cli.zip" structurizr-cli.zip
+RUN unzip structurizr-cli.zip -d /opt/structurizr/cli \
+ && rm -rf /opt/structurizr/structurizr-cli.zip \
+ && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr \
+ && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace"
+COPY workspace.dsl /mnt/volumes/data/workspace.dsl
+RUN chown "${USER}:${USER}" -R "/home/${USER}" /opt
+
+# ╭――――――――――――――――――――╮
+# │ CONTAINER          │
+# ╰――――――――――――――――――――╯
 USER $USER
- 
 WORKDIR /home/$USER
-# RUN mkdir -p /home/$USER/workspace/libraries 
-# RUN ln -fsv /mnt/volumes/containers /home/$USER/workspace/local
-# RUN ln -fsv /home/$USER/workspace/local/index.dsl /home/$USER/workspace/workspace.dsl
-RUN ln -fsv /mnt/volumes/container/workspace /home/$USER/workspace
+VOLUME /mnt/volumes/backup
+VOLUME /mnt/volumes/configmaps
+VOLUME /mnt/volumes/data
+VOLUME /mnt/volumes/secrets
 
-# ENV JAVA_HOME=/opt/jdk
-# ENV PATH=$PATH:/opt/jdk/bin
 
-ENTRYPOINT ["/etc/container/entrypoint"]
