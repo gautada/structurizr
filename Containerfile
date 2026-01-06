@@ -62,12 +62,12 @@ RUN rm -rf /etc/services.d/java \
 #  && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr \
 #  && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace"
 COPY workspace.dsl /mnt/volumes/data/workspace.dsl
+WORKDIR /home/$USER
 #
 # # ╭――――――――――――――――――――╮
 # # │ CONTAINER          │
 # # ╰――――――――――――――――――――╯
 # USER $USER
-# WORKDIR /home/$USER
 # VOLUME /mnt/volumes/backup
 # VOLUME /mnt/volumes/configmaps
 # VOLUME /mnt/volumes/data
