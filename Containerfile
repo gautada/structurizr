@@ -2,10 +2,10 @@ ARG JAVA_VERSION=25
 
 FROM docker.io/gautada/java:$JAVA_VERSION as BUILD
 
-ARG IMAGE_VERSION="main"
+ARG IMAGE_BRANCH="main"
 WORKDIR /opt
 RUN apk add --no-cache maven \
- && git clone --branch main https://github.com/structurizr/structurizr.git structurizr
+ && git clone --branch ${IMAGE_BRANCH} https://github.com/structurizr/structurizr.git structurizr
 WORKDIR /opt/structurizr
 RUN mvn -DexcludedGroups=IntegrationTest package
 # RUN ls structurizr-application/target/*
@@ -15,7 +15,7 @@ FROM docker.io/gautada/java:$JAVA_VERSION as CONTAINER
 # │ VARIABLES          │
 # ╰――――――――――――――――――――╯
 ARG IMAGE_NAME="structurizr"
-
+ARG IMAGE_VERSION="1.0.0"
 # ╭――――――――――――――――――――╮
 # │ METADATA           │
 # ╰――――――――――――――――――――╯
@@ -49,7 +49,7 @@ RUN /usr/sbin/usermod -l $USER duke \
 # │ APPLICATION        │
 # ╰――――――――――――――――――――╯
 RUN /sbin/apk add --no-cache graphviz  bash 
-COPY --from=BUILD /opt/structurizr/structurizr-application/target/structurizr-1.0.0.war /opt/structurizr/structurizr.war
+COPY --from=BUILD "/opt/structurizr/structurizr-application/target/structurizr-${IMAGE_VERSION}.war" /opt/structurizr/structurizr.war
 COPY structurizr.s6 /etc/services.d/structurizr/run
 RUN rm -rf /etc/services.d/java \
  && chown "${USER}:${USER}" -R "/home/${USER}" /opt
