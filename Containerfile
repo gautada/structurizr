@@ -1,18 +1,26 @@
-ARG JAVA_VERSION=25.0.0
+ARG JAVA_VERSION=25
+
+FROM docker.io/gautada/java:$JAVA_VERSION as BUILD
+
+ARG IMAGE_VERSION="main"
+WORKDIR /opt
+RUN apk add --no-cache maven \
+ && git clone --branch main https://github.com/structurizr/structurizr.git structurizr
+WORKDIR /opt/structurizr
+RUN mvn -DexcludedGroups=IntegrationTest package
+# RUN ls structurizr-application/target/*
 
 FROM docker.io/gautada/java:$JAVA_VERSION as CONTAINER
-USER root
 # ╭――――――――――――――――――――╮
 # │ VARIABLES          │
 # ╰――――――――――――――――――――╯
-ARG IMAGE_NAME="structurizer"
-ARG IMAGE_VERSION="3262"
+ARG IMAGE_NAME="structurizr"
 
 # ╭――――――――――――――――――――╮
 # │ METADATA           │
 # ╰――――――――――――――――――――╯
 LABEL org.opencontainers.image.title="${IMAGE_NAME}"
-LABEL org.opencontainers.image.description="A base container for java."
+LABEL org.opencontainers.image.description="C4 as code and display server."
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/gautada/${IMAGE_NAME}"
 LABEL org.opencontainers.image.source="https://github.com/gautada/${IMAGE_NAME}"
 LABEL org.opencontainers.image.version="${PACKAGE_VERSION}"
@@ -27,38 +35,41 @@ RUN /usr/sbin/usermod -l $USER duke \
   && /usr/sbin/groupmod -n $USER duke \
   && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
 
-# ╭――――――――――――――――――――╮
-# │ BACKUP             │
-# ╰――――――――――――――――――――╯
-# COPY backup.sh /etc/container/backup
-
-# ╭――――――――――――――――――――╮
-# │ ENTRYPOINT         │
-# ╰――――――――――――――――――――╯
-COPY entrypoint.sh /etc/container/entrypoint
-
+# # ╭――――――――――――――――――――╮
+# # │ BACKUP             │
+# # ╰――――――――――――――――――――╯
+# # COPY backup.sh /etc/container/backup
+#
+# # ╭――――――――――――――――――――╮
+# # │ ENTRYPOINT         │
+# # ╰――――――――――――――――――――╯
+# COPY entrypoint.sh /etc/container/entrypoint
+#
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
 # ╰――――――――――――――――――――╯
 RUN /sbin/apk add --no-cache graphviz  bash 
-WORKDIR /opt/structurizr
-ADD "https://github.com/structurizr/lite/releases/download/v${IMAGE_VERSION}/structurizr-lite.war" structurizr.war
-ADD "https://github.com/structurizr/cli/releases/download/v${IMAGE_VERSION}/structurizr-cli.zip" structurizr-cli.zip
-RUN unzip structurizr-cli.zip -d /opt/structurizr/cli \
- && rm -rf /opt/structurizr/structurizr-cli.zip \
- && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr \
- && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace"
+COPY --from=BUILD /opt/structurizr/structurizr-application/target/structurizr-1.0.0.war /opt/structurizr/structurizr.war
+COPY structurizr.s6 /etc/services.d/structurizr/run
+RUN rm -rf /etc/services.d/java \
+ && chown "${USER}:${USER}" -R "/home/${USER}" /opt
+# WORKDIR /opt/structurizr
+# ADD "https://github.com/structurizr/lite/releases/download/v${IMAGE_VERSION}/structurizr-lite.war" structurizr.war
+# ADD "https://github.com/structurizr/cli/releases/download/v${IMAGE_VERSION}/structurizr-cli.zip" structurizr-cli.zip
+# RUN unzip structurizr-cli.zip -d /opt/structurizr/cli \
+#  && rm -rf /opt/structurizr/structurizr-cli.zip \
+#  && ln -fsv /opt/structurizr/cli/structurizr.sh /usr/bin/structurizr \
+#  && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace"
 COPY workspace.dsl /mnt/volumes/data/workspace.dsl
-RUN chown "${USER}:${USER}" -R "/home/${USER}" /opt
-
-# ╭――――――――――――――――――――╮
-# │ CONTAINER          │
-# ╰――――――――――――――――――――╯
-USER $USER
-WORKDIR /home/$USER
-VOLUME /mnt/volumes/backup
-VOLUME /mnt/volumes/configmaps
-VOLUME /mnt/volumes/data
-VOLUME /mnt/volumes/secrets
-
-
+#
+# # ╭――――――――――――――――――――╮
+# # │ CONTAINER          │
+# # ╰――――――――――――――――――――╯
+# USER $USER
+# WORKDIR /home/$USER
+# VOLUME /mnt/volumes/backup
+# VOLUME /mnt/volumes/configmaps
+# VOLUME /mnt/volumes/data
+# VOLUME /mnt/volumes/secrets
+#
+#

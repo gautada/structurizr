@@ -11,6 +11,8 @@ set of elements and relationships
 
 ## Notes
 
+- 2025-01-06 - Making the conversion of this container image to the vNext
+consolidated structurizr.
 - 2025-03-04 - Issue with Java/OpenJDK on Alpine and working on M-series
 Macs. This image uses early-release of [OpenJDK](https://openjdk.org)
 from [jdk.java.net](https://jdk.java.net) to handle the issue.  Make sure to
