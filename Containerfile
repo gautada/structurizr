@@ -33,7 +33,8 @@ ARG USER=dsl
 RUN /usr/sbin/usermod -l $USER duke \
   && /usr/sbin/usermod -d /home/$USER -m $USER \
   && /usr/sbin/groupmod -n $USER duke \
-  && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
+  && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd \
+  && rm -rf /home/duke
 
 # # ╭――――――――――――――――――――╮
 # # │ BACKUP             │
