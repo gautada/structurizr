@@ -51,9 +51,11 @@ RUN /usr/sbin/usermod -l $USER duke \
 # ╰――――――――――――――――――――╯
 RUN /sbin/apk add --no-cache graphviz  bash 
 COPY --from=BUILD "/opt/structurizr/structurizr-application/target/structurizr-${IMAGE_VERSION}.war" /opt/structurizr/structurizr.war
+COPY --from=BUILD /opt/structurizr/structurizr-themes /home/dsl/structurizr-themes
 COPY structurizr.s6 /etc/services.d/structurizr/run
 RUN rm -rf /etc/services.d/java \
  && ln -fsv /mnt/volumes/data/workspace "/home/${USER}/workspace" \
+ && chown "${USER}:${USER}" -R /home/dsl/structurizr-themes \
  && chown "${USER}:${USER}" -R "/home/${USER}" /opt
 # WORKDIR /opt/structurizr
 # ADD "https://github.com/structurizr/lite/releases/download/v${IMAGE_VERSION}/structurizr-lite.war" structurizr.war
