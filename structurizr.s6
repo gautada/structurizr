@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+set -e 
+
+export JAVA_HOME=/usr/lib/jvm/default-jvm
+export PATH="$PATH:${JAVA_HOME}/bin"
+  
+if [ -z "${STRUCTURIZR_WORKSPACE}" ] ; then
+  export STRUCTURIZR_WORKSPACE="/home/dsl/workspace" 
+fi
+  
+su dsl -c "/usr/bin/java -Djdk.util.jar.enableMultiRelease=false -jar /opt/structurizr/structurizr.war server ${STRUCTURIZR_WORKSPACE}"
